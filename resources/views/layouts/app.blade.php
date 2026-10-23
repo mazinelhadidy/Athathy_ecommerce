@@ -98,13 +98,13 @@
                     </button>
                     <ul class="absolute right-0 mt-2 w-40 bg-white border shadow-lg py-2 rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">                            
                         @guest
-                        <li><a href='{{ route("login") }}' class="block px-4 py-2 hover:bg-gray-100 text-sm">Sign In</a></li> 
+                        <li><a href='{{ route('login') }}' class="block px-4 py-2 hover:bg-gray-100 text-sm">Sign In</a></li> 
                         <li><a href='{{ route("register") }}' class="block px-4 py-2 hover:bg-gray-100 text-sm">Sign Up</a></li>  
 
                         @else
                         <li><a href='{{ Auth::user()->utype=="ADM" ? route("admin.index") : route("users.index") }}' class="block px-4 py-2 hover:bg-gray-100 text-sm">My Account</a></li>
                         <li>
-                            <a href="{{ route("logout") }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="block px-4 py-2 hover:bg-gray-100 text-sm">Sign Out</a>
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="block px-4 py-2 hover:bg-gray-100 text-sm">Sign Out</a>
                             <form id="logout-form" action="{{ route('logout') }}" method="post" class="hidden">
 
                             </form>
