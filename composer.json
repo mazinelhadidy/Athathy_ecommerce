@@ -7,6 +7,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "intervention/image": "^4.4",
+        "intervention/image-laravel": "4.1.1",
         "laravel/breeze": "^2.4",
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0"
