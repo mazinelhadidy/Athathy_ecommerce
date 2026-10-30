@@ -65,4 +65,43 @@ class AdminController extends Controller
         $manager = new ImageManager(\Intervention\Image\Drivers\Gd\Driver::class);
         $manager->decode($image)->resize($width, $height)->save($thumbnailPath . '/' . $imageName);
     }
+
+    public function brandEdit($id)
+    {
+        $brand = Brand::findOrFail($id);
+        return view('admin.brand-edit',compact('brand'));
+    }
+
+    public function brandUpdate(Request $request, $id)
+    {
+        $request->validate([
+        'name'=>'required|string|max:255',
+        'slug'=>'nullable|string|max:255|unique:brands,slug',
+        'imaage'=> 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'status'=>'nullable|boolean',
+        ]);
+
+        $brand = Brand::findOrFail($id);
+        $brand->name = $request->name;
+        $brand->slug = $request->slug ? Str::slug($request->slug) : Str::slug($request->name);
+        $brand->status = $request->has('status')? 1:0;
+
+        if($request->hasFile('image'))
+            {
+                // Dekete Old Image
+                if($brand->image)
+               {
+                @unlink(public_path('uploads/brands/'. $brand->image));
+                @unlink(public_path('uploads/brands/thumbnails/'. $brand->image));
+               }
+
+               $imageName= time() . '_' . uniqid() . '.' . $request->image->extension();
+               $this->generateThumbnailImage($request->image,$imageName,'uploads/brands',124,124);
+               $request->image->move(public_path('uploads/brands'),$imageName);
+               $brand ->image= $imageName;
+            }
+            $brand->save();
+
+            return redirect()->route('admin.brands')->with('success','Brand Updated Successfully! ');
+    }
 }

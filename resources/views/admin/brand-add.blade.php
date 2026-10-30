@@ -10,14 +10,21 @@
                 </div>
                 <div class="max-w-3xl mx-auto">
                     <form method="POST" action="{{ route('admin.brand.store') }}" enctype="multipart/form-data" class="bg-white rounded-xl shadow-sm border border-gray-100 p-8 space-y-6">
-                      @csrf                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      @csrf                  
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Brand Name *</label>
-                                <input type="text" id="name" name="name" placeholder="e.g. Samsung" class="w-full border px-4 py-2 rounded-lg outline-none focus:ring-1 focus:ring-primary">
+                                <input type="text" id="name" name="name" placeholder="e.g. Samsung" class="w-full border px-4 py-2 rounded-lg outline-none focus:ring-1 focus:ring-primary" value="{{old('name')}}" required>
+                                @error('name')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Brand Slug</label>
-                                <input type="text" id="slug" name="slug" placeholder="samsung" class="w-full border px-4 py-2 rounded-lg bg-gray-50 outline-none">
+                                <input type="text" id="slug" name="slug" placeholder="samsung" class="w-full border px-4 py-2 rounded-lg bg-gray-50 outline-none" value="{{ old('slug') }}" readonly>
+                                @error('slug')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
 
@@ -40,12 +47,14 @@
                                 <button type="button" id="remove-logo-btn" class="hidden absolute top-2 right-2 z-30 bg-white text-red-500 hover:text-white hover:bg-red-500 rounded-full w-8 h-8 flex items-center justify-center shadow-md border border-gray-200 transition-colors focus:outline-none" title="Remove image">
                                     <i class="fa-solid fa-xmark"></i>
                                 </button>
-
                             </div>
+                            @error('image')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <input type="checkbox" id="status" name="status" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                            <input type="checkbox" id="status" name="status" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"  value="1" {{ old('status') ? 'checked':'' }}>
                             <label for="status" class="text-sm text-gray-700">Set as Active Brand</label>
                         </div>
 
@@ -58,4 +67,62 @@
             </main>
 
             <!-- Main Content End -->
+
+            
+            <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const nameInput     = document.getElementById('name');
+                const slugInput     = document.getElementById('slug');
+                const imageInput    = document.getElementById('brand-image');
+                const imagePreview  = document.getElementById('image-preview');
+                const uploadContent = document.getElementById('upload-content');
+                const removeBtn     = document.getElementById('remove-logo-btn');
+
+                // ===== 1) الـ slug التلقائي (لو الحقول موجودة في الصفحة) =====
+                if (nameInput && slugInput) {
+                    function makeSlug(text) {
+                        return text
+                            .toString()
+                            .trim()
+                            .toLowerCase()
+                            .replace(/[^\p{L}\p{N}\s-]/gu, '')
+                            .replace(/\s+/g, '-')
+                            .replace(/-+/g, '-')
+                            .replace(/^-+|-+$/g, '');
+                    }
+
+                    nameInput.addEventListener('input', function () {
+                        slugInput.value = makeSlug(nameInput.value);
+                    });
+                }
+
+                // ===== 2) معاينة الصورة =====
+                if (imageInput) {
+                    imageInput.addEventListener('change', function () {
+                        const file = this.files[0];
+                        if (!file) return;
+
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            imagePreview.src = e.target.result;
+                            imagePreview.classList.remove('hidden');
+                            uploadContent.classList.add('hidden');
+                            removeBtn.classList.remove('hidden');
+                        };
+                        reader.readAsDataURL(file);
+                    });
+
+                    // ===== 3) زرار إزالة الصورة =====
+                    removeBtn.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        imageInput.value = '';
+                        imagePreview.src = '';
+                        imagePreview.classList.add('hidden');
+                        uploadContent.classList.remove('hidden');
+                        removeBtn.classList.add('hidden');
+                    });
+                }
+            });
+            </script>
+
 </x-admin-layout>    
