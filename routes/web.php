@@ -32,6 +32,8 @@ Route::middleware([AuthAdmin::class])->group(function () {
     Route::get('/admin/brand-edit/{id}', [AdminController::class,'brandEdit'])->name('admin.brand.edit');
     Route::put('/admin/brand-update/{id}', [AdminController::class,'brandUpdate'])->name('admin.brand.update');
     Route::delete('/admin/brand-delete/{id}', [AdminController::class,'brandDelete'])->name('admin.brand.delete');
+
+    Route::get('/admin/categories', [AdminController::class,'categories'])->name('admin.categories');
 });
 
 require __DIR__.'/auth.php';

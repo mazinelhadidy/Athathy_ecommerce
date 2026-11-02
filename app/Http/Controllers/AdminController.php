@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use App\Models\Category;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
@@ -123,5 +124,18 @@ class AdminController extends Controller
         $brand->delete();
 
         return redirect()->route('admin.brands')->with('success', 'Brand deleted successfully');
+    }
+
+    public function categories()
+    {
+        $query = Category::query();
+        if ($search = request('search')) {
+            $query->where('name', 'like', "%{$search}%");
+        }
+        if (request()->filled('status')) {
+            $query->where('status', request('status'));
+        }
+        $categories = $query->orderBy('id', 'DESC')->paginate(10)->withQueryString();
+        return view('admin.categories', compact('categories'));
     }
 }
