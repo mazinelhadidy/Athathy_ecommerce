@@ -138,4 +138,38 @@ class AdminController extends Controller
         $categories = $query->orderBy('id', 'DESC')->paginate(10)->withQueryString();
         return view('admin.categories', compact('categories'));
     }
+
+    public function categoryAdd()
+    {
+        return view('admin.category-add');
+    }
+
+    public function categoryStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'slug' => 'nullable|string|max:255|unique:categories,slug',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'status' => 'nullable|boolean',
+        ]);
+
+
+        $category = new Category();
+        $category->name = $request->name;
+        $category->slug = $request->slug ? Str::slug($request->slug) : Str::slug($request->name);
+        $category->status = $request->has('status') ? 1 : 0;
+
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->extension();
+
+            $this->generateThumbnailImage($image, $imageName, 'uploads/categories');
+            $image->move(public_path('uploads/categories'), $imageName);
+
+            $category->image = $imageName;
+        }
+        $category->save();
+
+        return redirect()->route('admin.categories')->with('success', 'Category added successfully.');
+    }
 }

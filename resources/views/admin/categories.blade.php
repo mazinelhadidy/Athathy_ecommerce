@@ -8,7 +8,7 @@
                         <h1 class="text-2xl font-bold text-gray-800">Categories</h1>
                         <p class="text-sm text-gray-500">Manage product categories and partners</p>
                     </div>
-                    <a href="#" class="bg-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                    <a href="{{ route('admin.category.add') }}" class="bg-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-plus"></i> Add New Category
                     </a>
                 </div>
@@ -103,7 +103,7 @@
                                         <i class="fa-solid fa-boxes-stacked text-4xl mb-3 text-gray-300"></i>
                                         <h3 class="text-lg font-medium text-gray-900">Categories not available</h3>
                                         <p class="text-sm mt-1">You haven't added any categories to your store yet.</p>
-                                        <a href="#" class="mt-4 text-primary hover:underline text-sm font-medium">
+                                        <a href="{{ route('admin.category.add') }}" class="mt-4 text-primary hover:underline text-sm font-medium">
                                             Add your first category
                                         </a> 
                                     </div>
