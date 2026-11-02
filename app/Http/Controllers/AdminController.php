@@ -172,4 +172,41 @@ class AdminController extends Controller
 
         return redirect()->route('admin.categories')->with('success', 'Category added successfully.');
     }
+
+    public function categoryEdit($id)
+    {
+        $category = Category::findOrFail($id);
+        return view('admin.category-edit', compact('category'));
+    }
+
+    public function categoryUpdate(Request $request, $id)
+    {
+        $request->validate([
+        'name' => 'required|string|max:255',
+        'slug' => 'nullable|string|max:255|unique:categories,slug',
+        'imaage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'status' => 'nullable|boolean',
+        ]);
+
+        $category = Category::findOrFail($id);
+        $category->name = $request->name;
+        $category->slug = $request->slug ? Str::slug($request->slug) : Str::slug($request->name);
+        $category->status = $request->has('status') ? 1 : 0;
+
+        if ($request->hasFile('image')) {
+            // Dekete Old Image
+            if ($category->image) {
+                @unlink(public_path('uploads/categories/'. $category->image));
+                @unlink(public_path('uploads/categories/thumbnails/'. $category->image));
+            }
+
+            $imageName = time() . '_' . uniqid() . '.' . $request->image->extension();
+            $this->generateThumbnailImage($request->image, $imageName, 'uploads/categories', 124, 124);
+            $request->image->move(public_path('uploads/categories'), $imageName);
+            $category ->image = $imageName;
+        }
+        $category->save();
+
+        return redirect()->route('admin.categories')->with('success', 'Category Updated Successfully! ');
+    }
 }

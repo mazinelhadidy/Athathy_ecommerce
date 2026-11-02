@@ -83,7 +83,7 @@
                                     </td>
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex items-center justify-end gap-2">
-                                            <a href="#" class="w-8 h-8 rounded-full hover:bg-gray-100 text-blue-500 transition flex items-center justify-center" title="Edit">
+                                            <a href="{{ route('admin.category.edit',['id'=>$category->id]) }}" class="w-8 h-8 rounded-full hover:bg-gray-100 text-blue-500 transition flex items-center justify-center" title="Edit">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
                                             <form id="delete-form-{{ $category->id }}" method="post" action="#" >
