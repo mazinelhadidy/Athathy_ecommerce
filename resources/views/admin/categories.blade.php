@@ -1,4 +1,4 @@
-<x-admin-layout>
+ <x-admin-layout>
       <!-- Main Content Start -->
 
             <main class="flex-1 overflow-y-auto p-6 bg-gray-100">
@@ -53,6 +53,7 @@
                                     <th class="px-6 py-4">Logo</th>
                                     <th class="px-6 py-4">Category Name</th>
                                     <th class="px-6 py-4">Slug</th>
+                                    <th class="px-6 py-4">Parent</th>
                                     <th class="px-6 py-4">Products</th>
                                     <th class="px-6 py-4">Status</th>
                                     <th class="px-6 py-4 text-right">Action</th>
@@ -71,6 +72,15 @@
                                         <span class="font-semibold text-gray-800">{{ $category->name }}</span>
                                     </td>
                                     <td class="px-6 py-4 text-sm text-gray-600">{{ $category->slug }}</td>
+                                   
+                                    <td class="px-6 py-4">
+                                        @if($category->parent)
+                                        <span class="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full text-xs front-semibold">{{ $category->parent->name }}</span>
+                                        @else
+                                        <span class="bg-yellow-100 text-yellow-700 px-2.5 py-1 rounded-full text-xs front-semibold">-</span>
+                                        @endif
+                                    </td>  
+
                                     <td class="px-6 py-4">
                                         <span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-semibold">0</span>
                                     </td>
