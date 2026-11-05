@@ -29,7 +29,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Parent Category *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Parent Category </label>
                             <select name="parent_id" class="w-full border px-4 py-2 rounded-lg outline-none focus:ring-1 focus:ring-primary">
                                 <option value="">-- Select Parent Category --</option>
                                 @foreach ($parentCategories as $pcategory)
@@ -42,7 +42,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Logo *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category Logo </label>
                             <div class="relative flex items-center justify-center w-full h-40">
                                 
                                 <label for="category-image" class="relative flex flex-col items-center justify-center w-full h-full border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition overflow-hidden">
