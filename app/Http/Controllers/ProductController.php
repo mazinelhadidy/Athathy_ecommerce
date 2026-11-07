@@ -8,6 +8,8 @@ use App\Models\Category;
 use App\Models\Brand;
 use Carbon\Carbon;
 use Intervention\Image\Laravel\Facades\Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 
 class ProductController extends Controller
@@ -21,7 +23,7 @@ class ProductController extends Controller
     public function productAdd()
     {
         $categories = Category::select('id', 'name')->orderBy('name')->get();
-        $brands = Brand::select('id', 'name')->orderBy('name')->get();
+        $brands     = Brand::select('id', 'name')->orderBy('name')->get();
         return view('admin.product-add', compact('categories', 'brands'));
     }
 
@@ -37,12 +39,12 @@ class ProductController extends Controller
             'SKU'              => 'required|string|max:100|unique:products,SKU',
             'stock_status'     => 'required|in:in_stock,out_of_stock,low_stock',
             'quantity'         => 'required|integer|min:0',
-            'featured'         => 'boolean',
-            'status'           => 'boolean',
+            'featured'         => 'nullable|boolean',
+            'status'           => 'nullable|boolean',
             'category_id'      => 'nullable|exists:categories,id',
             'brand_id'         => 'nullable|exists:brands,id',
-            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'image.*'          => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+            'images'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'images.*'          => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
         ]);
 
         $product = new Product();
@@ -66,8 +68,8 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = $curent_timestamp . '.' . $image->extension();
-            $this->resizeAndSaveImage($image, $imageName, 'uploadds/products', 570, 604);
-            $this->resizeAndSaveImage($image, $imageName, 'uploadds/products/thumbnails', 270, 303);
+            $this->resizeAndSaveImage($image, $imageName, 'uploads/products', 570, 604);
+            $this->resizeAndSaveImage($image, $imageName, 'uploads/products/thumbnails', 270, 303);
             $product->image = $imageName;
         }
 
@@ -100,6 +102,12 @@ class ProductController extends Controller
 
     public function resizeAndSaveImage($image, $imageName, $folder, $width = 270, $height = 303)
     {
-        //
+        $destinationPath = public_path($folder);
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        $manager = new ImageManager(new Driver());
+        $manager->decodePath($image->getRealPath())->cover($width, $height)->save($destinationPath . '/' . $imageName);
     }
 }

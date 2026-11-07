@@ -85,10 +85,10 @@
                                         <select id="stock_status" name="stock_status" class="w-full border px-4 py-2 rounded-lg focus:outline-none focus:border-primary text-sm bg-white">
                                             <option value="in_stock" {{old('stock_status')=='in_stock'? 'selected':''}} >In Stock</option>
                                             <option value="out_of_stock" {{old('stock_status')=='out_of_stock'? 'selected':''}}>Out of Stock</option>
-                                            @error('stock_status')
-                                        <p class="text-red-500 text-sm mt-1">{{$message}}</p>
-                                        @enderror
                                         </select>
+                                        @error('stock_status')
+                                         <p class="text-red-500 text-sm mt-1">{{$message}}</p>
+                                        @enderror
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
