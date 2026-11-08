@@ -222,4 +222,30 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products')->with('success', 'Product Updated Successfully.');
     }
+
+    public function productDelete($id)
+    {
+        $product = Product::findOrFail($id);
+
+        if ($product->image && File::exists(public_path('uploads/products/' . $product->image))) {
+            unlink(public_path('uploads/products/' . $product->image));
+        }
+        if ($product->image && File::exists(public_path('uploads/products/thumbnails/' . $product->image))) {
+            unlink(public_path('uploads/products/thumbnails/' . $product->image));
+        }
+
+        if ($product->images) {
+            $gellery_images = explode(",", $product->images);
+            foreach ($gellery_images as $gellery_image) {
+                if ($gellery_image && File::exists(public_path('uploads/products/gallery/' . $gellery_image))) {
+                    unlink(public_path('uploads/products/gallery/' . $gellery_image));
+                }
+                if ($gellery_image && File::exists(public_path('uploads/products/gallery/thumbnails/' . $gellery_image))) {
+                    unlink(public_path('uploads/products/gallery/thumbnails/' . $gellery_image));
+                }
+            }
+        }
+        $product->delete();
+        return redirect()->route('admin.products')->with('success', 'Product Deleted Successfully.');
+    }
 }
