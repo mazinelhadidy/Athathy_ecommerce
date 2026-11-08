@@ -6,9 +6,15 @@
                         <h1 class="text-2xl font-bold text-gray-800">Products</h1>
                         <p class="text-sm text-gray-500">Manage your product catalog</p>
                     </div>
-                    <a href="{{ route('admin.product.add') }}" class="bg-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-plus"></i> Add New Product
-                    </a>
+                    <div class="flex gap-3">
+                        <button type="button" id="bulkDeleteBtn" class="hidden bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-trash"></i> Delete Selected(<span id="selectedCount">0</span>)
+                        </button>
+                         
+                        <a href="{{ route('admin.product.add') }}" class="bg-primary hover:bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                             <i class="fa-solid fa-plus"></i> Add New Product
+                         </a>
+                    </div>
                 </div>
 
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
@@ -43,6 +49,10 @@
                 </div>
 
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <form id="bulkActionForm" method="POST" action="{{ route('admin.product.bulk.delete')}}">
+                    @csrf
+                    @method('DELETE')
+                </form>
                     <div class="overflow-x-auto">
                         @if(session('success'))
                             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
@@ -53,7 +63,7 @@
                             <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold">
                                 <tr>
                                     <th class="px-6 py-4">
-                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                        <input type="checkbox" id="selectAll" class="rounded border-gray-300 text-primary focus:ring-primary">
                                     </th>
                                     <th class="px-6 py-4">Product Name</th>
                                     <th class="px-6 py-4">Brand</th>
@@ -68,7 +78,7 @@
                                 @forelse($products as $product)
                                 <tr class="hover:bg-gray-50 transition">
                                     <td class="px-6 py-4">
-                                        <input type="checkbox" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                        <input type="checkbox" name="ids[]" form="bulkActionForm" value="{{ $product->id }}" class="product-checkbox rounded border-gray-300 text-primary focus:ring-primary">
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
@@ -171,6 +181,7 @@
     </div>
 
      <script>
+
         // Modal Elements
         const deleteModal = document.getElementById('deleteModal');
         const confirmBtn = document.getElementById('confirmDeleteBtn');
@@ -222,5 +233,40 @@
         }
         });
     </script> 
+
+    <script>
+      const selectAll = document.getElementById('selectAll');
+      const checkboxes = document.querySelectorAll('.product-checkbox');
+      const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+      const selectedCountSpan = document.getElementById('selectedCount');
+      const bulkForm = document.getElementById('bulkActionForm');
+
+      selectAll.addEventListener('change', function() {
+        checkboxes.forEach(cb=>cb.checked = this.checked);
+        updateBulkButton();    
+      });
+
+      checkboxes.forEach(cb=> {
+        cb.addEventListener('change',updateBulkButton);
+      });
+
+      function updateBulkButton() {
+        const checkedCount = document.querySelectorAll('.product-checkbox:checked').length;
+        selectedCountSpan.textContent = checkedCount;
+        
+        if(checkedCount > 0) {
+          bulkDeleteBtn.classList.remove('hidden');
+        } else {
+         bulkDeleteBtn.classList.add('hidden');
+        selectAll.checked = false;        }
+      }
+
+      bulkDeleteBtn.addEventListener('click', ()=> {
+        const count = document.querySelectorAll('.product-checkbox:checked').length;
+        if (confirm(`Are you sure you want to delete ${count} selected products?`)) {
+            bulkForm.submit();
+        }
+      });
+    </script>
 
 </x-admin-layout>

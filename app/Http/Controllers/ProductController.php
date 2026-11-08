@@ -248,4 +248,38 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('admin.products')->with('success', 'Product Deleted Successfully.');
     }
+
+    public function productBulkDelete(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',      // الarray نفسه 
+            'ids.*' => 'exists:products,id' //  الarray العناصر الي في
+        ]);
+
+        $ids = $request->ids;
+        $products = Product::whereIn('id', $ids)->get();
+
+        foreach ($products as $product) {
+            if ($product->image && File::exists(public_path('uploads/products/' . $product->image))) {
+                unlink(public_path('uploads/products/' . $product->image));
+            }
+            if ($product->image && File::exists(public_path('uploads/products/thumbnails/' . $product->image))) {
+                unlink(public_path('uploads/products/thumbnails/' . $product->image));
+            }
+
+            if ($product->images) {
+                $gellery_images = explode(",", $product->images);
+                foreach ($gellery_images as $gellery_image) {
+                    if ($gellery_image && File::exists(public_path('uploads/products/gallery/' . $gellery_image))) {
+                        unlink(public_path('uploads/products/gallery/' . $gellery_image));
+                    }
+                    if ($gellery_image && File::exists(public_path('uploads/products/gallery/thumbnails/' . $gellery_image))) {
+                        unlink(public_path('uploads/products/gallery/thumbnails/' . $gellery_image));
+                    }
+                }
+            }
+            $product->delete();
+        }
+        return back()->with('success', count($ids) . ' Products Deleted Successfully.');
+    }
 }
