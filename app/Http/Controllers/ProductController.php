@@ -34,7 +34,7 @@ class ProductController extends Controller
             'name'             => 'required|string|max:255',
             'slug'             => 'required|string|max:255|unique:products,slug',
             'short_description' => 'nullable|string|max:500',
-            'description'      => 'nullable|string',
+            'description'       => 'required|string',
             'regular_price'    => 'required|numeric|min:0',
             'sale_price'       => 'nullable|numeric|min:0|lt:regular_price',
             'SKU'              => 'required|string|max:100|unique:products,SKU',
@@ -44,8 +44,9 @@ class ProductController extends Controller
             'status'           => 'nullable|boolean',
             'category_id'      => 'nullable|exists:categories,id',
             'brand_id'         => 'nullable|exists:brands,id',
-            'images'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'images.*'          => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'images'           => 'nullable|array',
+            'images.*'         => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $product = new Product();
@@ -58,8 +59,8 @@ class ProductController extends Controller
         $product->sale_price = $request->sale_price;
         $product->SKU = $request->SKU;
         $product->stock_status = $request->stock_status;
-        $product->featured = $request->featured;
-        $product->status = $request->status;
+        $product->featured = $request->boolean('featured');
+        $product->status   = $request->boolean('status');
         $product->quantity = $request->quantity;
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
@@ -130,7 +131,7 @@ class ProductController extends Controller
             'slug'             => 'required|string|max:255|unique:products,slug,' . $product->id,
             'short_description' => 'nullable|string|max:500',
             'information'      => 'nullable|string',
-            'description'      => 'nullable|string',
+            'description'      => 'required|string',
             'regular_price'    => 'required|numeric|min:0',
             'sale_price'       => 'nullable|numeric|min:0|lt:regular_price',
             'SKU'              => 'required|string|max:100|unique:products,SKU,' . $product->id,
@@ -140,8 +141,9 @@ class ProductController extends Controller
             'status'           => 'nullable|boolean',
             'category_id'      => 'nullable|exists:categories,id',
             'brand_id'         => 'nullable|exists:brands,id',
-            'images'           => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'images.*'         => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+            'image'            => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'images'           => 'nullable|array',
+            'images.*'         => 'image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $product->name = $request->name;
@@ -154,8 +156,8 @@ class ProductController extends Controller
         $product->SKU = $request->SKU;
         $product->stock_status = $request->stock_status;
         $product->quantity = $request->quantity;
-        $product->featured = $request->featured;
-        $product->status = $request->status;
+        $product->featured = $request->boolean('featured');
+        $product->status   = $request->boolean('status');
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
 
@@ -166,7 +168,7 @@ class ProductController extends Controller
             if ($product->image && File::exists(public_path('uploads/products/' . $product->image))) {
                 unlink(public_path('uploads/products/' . $product->image));
             }
-            if ($product->image && File::exists(public_path('uploads/products/' . $product->image))) {
+            if ($product->image && File::exists(public_path('uploads/products/thumbnails/' . $product->image))) {
                 unlink(public_path('uploads/products/thumbnails/' . $product->image));
             }
 
@@ -183,16 +185,17 @@ class ProductController extends Controller
 
         if ($request->deleted_gallery_images && is_array($request->deleted_gallery_images)) {
             foreach ($request->deleted_gallery_images as $deletedImage) {
-                if ($deletedImage && File::exists(public_path('uploads/products/gallery/' . $deletedImage))) {
-                    @unlink(public_path('uploads/products/' . $deletedImage));
+                $deletedImage = basename($deletedImage);
+
+                $key = array_search($deletedImage, $gallery_arr);
+                if ($key === false) {
+                    continue;
                 }
 
-                if ($deletedImage && File::exists(public_path('uploads/products/thumbnails/' . $deletedImage))) {
-                    @unlink(public_path('uploads/products/thumbnails/' . $deletedImage));
-                }
-                if ($key = array_search($deletedImage, $gallery_arr)) {
-                    unset($gallery_arr[$key]);
-                }
+                File::delete(public_path('uploads/products/gallery/' . $deletedImage));
+                File::delete(public_path('uploads/products/gallery/thumbnails/' . $deletedImage));
+
+                unset($gallery_arr[$key]);
             }
             $gallery_arr = array_values($gallery_arr);
         }

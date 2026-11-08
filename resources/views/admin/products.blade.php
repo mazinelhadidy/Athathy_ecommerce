@@ -79,8 +79,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $product->brand->name }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $product->category->name }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $product->brand?->name ?? '—' }}</td>
+                                    <td class="px-6 py-4 text-sm text-gray-600">{{ $product->category?->name ?? '—' }}</td>
                                     <td class="px-6 py-4 text-sm font-medium text-gray-800">
                                         @if($product->sale_price)
                                         <span class="line-through text-gray-400 mr-2">${{number_format($product->regular_price, 2)}}</span>
