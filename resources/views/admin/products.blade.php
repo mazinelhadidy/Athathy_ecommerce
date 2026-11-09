@@ -17,9 +17,9 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
-                    <div class="flex flex-col md:flex-row gap-4 justify-between">
-                        <form method="GET" action="{{url()->current()}}" id="filterForm" class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+             <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                <div class="flex flex-col md:flex-row gap-4 justify-between">
+                    <form method="GET" action="{{url()->current()}}" id="filterForm" class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
                             <div class="relative w-full md:w-64">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-3">
                                     <i class="fa-solid fa-search text-gray-400"></i>
@@ -52,15 +52,20 @@
                                 Clear Filters
                               </a>
                             @endif
-                            </form> 
+                     </form> 
 
+                     <div class="flex gap-2">
+                        <button onclick="printDiv('pritableArea')" class="border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-print"></i> Print
+                        </button>
                         <button class="border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-file-export"></i> Export
                         </button>
                     </div>
-                </div>
+                 </div>
+             </div>
 
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+             <div id="pritableArea" class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <form id="bulkActionForm" method="POST" action="{{ route('admin.product.bulk.delete')}}">
                     @csrf
                     @method('DELETE')
@@ -195,7 +200,6 @@
     </div>
 
      <script>
-
         // Modal Elements
         const deleteModal = document.getElementById('deleteModal');
         const confirmBtn = document.getElementById('confirmDeleteBtn');
@@ -249,6 +253,7 @@
     </script> 
 
     <script>
+    // checkbox for delete product
       const selectAll = document.getElementById('selectAll');
       const checkboxes = document.querySelectorAll('.product-checkbox');
       const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
@@ -281,6 +286,17 @@
             bulkForm.submit();
         }
       });
+    </script>
+
+    <script>
+            // Print Product 
+       function printDiv(divId){
+        var printContent = document.getElementById(divId).innerHTML;
+        var originalContent = document.body.innerHTML;
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+       }
     </script>
 
 </x-admin-layout>
