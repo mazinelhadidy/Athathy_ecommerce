@@ -58,9 +58,9 @@
                         <button onclick="printDiv('pritableArea')" class="border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-print"></i> Print
                         </button>
-                        <button class="border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
+                        <a href="{{route('admin.product.export')}}" class="border border-gray-300 text-gray-600 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-file-export"></i> Export
-                        </button>
+                        </a>
                     </div>
                  </div>
              </div>
