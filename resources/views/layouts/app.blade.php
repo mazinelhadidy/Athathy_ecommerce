@@ -57,7 +57,7 @@
                     <nav>
                         <ul class="flex space-x-8 font-medium text-gray-700">
                             <li><a href="index.php" class="hover:text-primary transition">Home</a></li>
-                            <li><a href="shop.php" class="hover:text-primary transition">Shop</a></li>
+                            <li><a href="{{ route('shop.index') }}" class="hover:text-primary transition">Shop</a></li>
                             <li><a href="cart.php" class="hover:text-primary transition">Cart</a></li>
                             <li><a href="wishlist.php" class="hover:text-primary transition">Wishlist</a></li>
                             <li><a href="contact.php" class="hover:text-primary transition">Contact</a></li>

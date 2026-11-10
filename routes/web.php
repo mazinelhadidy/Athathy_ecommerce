@@ -7,12 +7,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Middleware\AuthAdmin;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ShopController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home.index');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
