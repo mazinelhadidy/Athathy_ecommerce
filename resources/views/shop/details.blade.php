@@ -145,12 +145,13 @@
             <div class="max-w-4xl mx-auto">
                 <div id="info" class="tab-content hidden space-y-4">
                     <h4 class="font-bold text-lg">Information</h4>
-                    {{$product->information}}
+                    {!! $product->information !!}
                 </div>
 
                 <div id="desc" class="tab-content">
                     <h4 class="font-bold text-lg">Description</h4>
-                    {{$product->description}}                </div>
+                    {!! $product->description !!} 
+               </div>
 
                 <div id="review" class="tab-content hidden">
                     <div class="space-y-6 mb-10">
