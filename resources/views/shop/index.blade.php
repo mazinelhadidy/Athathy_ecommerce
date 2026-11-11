@@ -154,7 +154,7 @@
                     @foreach($products as $product )
                     <div class="group">
                         <div class="relative overflow-hidden bg-gray-100 rounded-lg mb-4">
-                            <a href="details.php">
+                            <a href="{{ route('shop.product.details',$product->slug) }}">
                                 <img src="{{ asset('uploads/products/thumbnails')}}/{{ $product->image }}" alt="{{$product->name}}" class="w-full h-[300px] object-cover transition duration-500 group-hover:scale-105" />
                             </a>
                             <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -170,7 +170,7 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            <h4 class="text-lg font-medium hover:text-primary"><a href="details.php">{{$product->name}}</a></h4>
+                            <h4 class="text-lg font-medium hover:text-primary"><a href="{{ route('shop.product.details',$product->slug)}}">{{$product->name}}</a></h4>
                             <p class="text-primary font-bold mt-1">
                                 <div class="mb-4">
                                     <div class="flex items-center space-x-4 mb-2">
