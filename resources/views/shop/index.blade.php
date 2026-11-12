@@ -14,8 +14,8 @@
     </div>
 
     <div class="container mx-auto px-4 py-16">
-        <div class="flex flex-col lg:flex-row gap-8">
-            
+        <form id="form-filter" method="GET" action="{{route('shop.index')}}" class="">
+            <div class="flex flex-col lg:flex-row gap-8 ">
             <aside class="w-full lg:w-1/4 order-2 lg:order-1 space-y-8">
                 
                 <div class="bg-gray-50 p-6 rounded-lg border">
@@ -125,11 +125,11 @@
                 
                 <div class="flex flex-col sm:flex-row justify-between items-center bg-white border p-4 rounded mb-8 shadow-sm">
                     <p class="text-sm mb-4 sm:mb-0">
-                        Showing <span class="font-bold text-primary">12</span> of <span class="font-bold">30</span> Results
+                        Showing <span class="font-bold text-primary">{{ $products->firstItem()??0 }} - {{$products->lastItem()??0}}</span> of <span class="font-bold">{{$products->total()}}</span> Results
                     </p>
                     
                     <div class="flex items-center space-x-6">
-                        <div class="flex space-x-2">
+                        <div class="flex space-x-2"> 
                             <button id="btn-grid" class="w-8 h-8 flex items-center justify-center rounded bg-primary text-white transition">
                                 <i class="fa fa-th"></i>
                             </button>
@@ -140,11 +140,19 @@
 
                         <div class="flex items-center">
                             <span class="mr-2 text-sm font-medium">Sort By:</span>
-                            <select class="border rounded p-1 text-sm focus:outline-none focus:border-primary">
-                                <option>Featured</option>
-                                <option>Price: Low to High</option>
-                                <option>Price: High to Low</option>
-                                <option>Newest</option>
+                            <select name="sort_by" class="border rounded p-1 text-sm focus:outline-none focus:border-primary auto-submit">
+                                <option value="newest" {{request('sort_by')=="newest"? "selected":""}}>Newest</option>
+                                <option value="price_asc" {{request('sort_by')=="price_asc"? "selected":""}}>Price: Low to High</option>
+                                <option value="price_desc" {{request('sort_by')=="price_desc"? "selected":""}}>Price: High to Low</option>
+                                <option value="featured" {{request('sort_by')=="featured"?"selected":""}}>Featured</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="mr-2 text-sm font-medium">View:</span>
+                            <select name="per_page" class="border rounded p-1 text-sm focus:outline-none focus:border-primary auto-submit">
+                                <option value="3" {{request('per_page')=="3"?"selected":""}}>3 Products</option>
+                                <option value="6" {{request('per_page')=="6"?"selected":""}}>6 Products</option>
+                                <option value="48" {{request('per_page')=="48"?"selected":""}}>48 Products</option>
                             </select>
                         </div>
                     </div>
@@ -249,10 +257,23 @@
                 <div class="mt-12 flex justify-center">
                     {{ $products->links() }}
                 </div>
-
+ 
             </div>
         </div>
+        </form>
     </div>
 
     <!-- Main Content End -->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.getElementById("form-filter");
+            document.querySelectorAll('.auto-submit').forEach(element => {
+            element.addEventListener('change', () => {
+                    form.submit();
+                });
+            });
+        });
+    </script>
+
 </x-app-layout>
