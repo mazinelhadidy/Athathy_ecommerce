@@ -1,4 +1,25 @@
 <x-app-layout>
+
+    <style>
+        .custom-range-slider::-webkit-slider-thumb {
+           pointer-events: auto;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #1e90ff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .custom-range-slider::-moz-range-thumb {
+           pointer-events: auto;
+            width: 16px;
+            height: 16px;
+            background: #1e90ff;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
       <!-- Main Content Start -->
 
     <div class="relative bg-sky-700 text-white h-64 flex items-center justify-center bg-cover bg-center" style="background-image: url('assets/images/page-banner.jpg');">
@@ -17,60 +38,71 @@
         <form id="form-filter" method="GET" action="{{route('shop.index')}}" class="">
             <div class="flex flex-col lg:flex-row gap-8 ">
             <aside class="w-full lg:w-1/4 order-2 lg:order-1 space-y-8">
-                
+
+                @if(request()->anyFilled(['search','brand','category','min_price','max_price','sort_by','per_page']))
+                 <div class="flex items-center space-x-2">
+                    Filters Applied: 
+                  <a href="{{ route('shop.index') }}" class="text-sm text-red-500 hover:text-primary"><i class="fa-solid fa-xmark"></i>
+                  <span class="text-sm text-red-600">Clear All Filters</span>
+                  </a>
+                 </div>
+                @endif
+
                 <div class="bg-gray-50 p-6 rounded-lg border">
                     <form class="relative">
-                        <input type="text" placeholder="Search product..." class="w-full border p-3 rounded focus:outline-none focus:border-primary pr-10">
-                        <button class="absolute right-3 top-3 text-gray-400 hover:text-primary"><i class="fa fa-search"></i></button>
+                        <input type="text" name="search" value="{{request('search')}}" placeholder="Search product..." class="w-full border p-3 rounded focus:outline-none focus:border-primary pr-10">
+                        <button type="submit" class="absolute right-3 top-3 text-gray-400 hover:text-primary"><i class="fa fa-search"></i></button>
                     </form>
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-lg border">
+                    <h4 class="font-bold text-lg mb-4">Brands</h4>
+                    <ul class="space-y-3">
+                        @foreach($brands as $brand)
+                        <li class="flex items-center">
+                            <label class="flex items-center cursor-pointer hover:text-primary">
+                                <input type="checkbox" name="brand[]" value="{{ $brand->id }}" {{ in_array($brand->id,request('brand',[])) ? 'checked':''}} class="peer custom-checkbox hidden filter-checkbox">
+                                <div class="w-4 h-4 border border-gray-300 rounded mr-3 flex items-center justify-center bg-white transition peer-checked:bg-primary peer-checked:border-primary text-transparent peer-checked:text-white">
+                                    <i class="fa fa-check text-[10px]"></i>
+                                </div> 
+                                 {{$brand->name}} ({{$brand->products_count}})
+                            </label>
+                        </li>
+                        @endforeach
+                    </ul>
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-lg border">
                     <h4 class="font-bold text-lg mb-4">Categories</h4>
                     <ul class="space-y-3">
+                        @foreach($categories as $category)
                         <li class="flex items-center">
                             <label class="flex items-center cursor-pointer hover:text-primary">
-                                <input type="checkbox" class="custom-checkbox hidden">
-                                <div class="w-4 h-4 border border-gray-300 rounded mr-3 flex items-center justify-center bg-white transition"></div>
-                                Office Chair
+                                <input type="checkbox" name="category[]" value="{{ $category->id }}" {{in_array($category->id,request('category',[])) ? 'checked' :''}} class="peer custom-checkbox hidden filter-checkbox">
+                                <div class="w-4 h-4 border border-gray-300 rounded mr-3 flex items-center justify-center bg-white transition peer-checked:bg-primary peer-checked:border-primary text-transparent peer-checked:text-white">
+                                    <i class="fa fa-check text-[10px]"></i>
+                                </div>
+                                 {{ $category->name }} ({{ $category->products_count }})
                             </label>
                         </li>
-                        <li class="flex items-center">
-                            <label class="flex items-center cursor-pointer hover:text-primary">
-                                <input type="checkbox" class="custom-checkbox hidden">
-                                <div class="w-4 h-4 border border-gray-300 rounded mr-3 flex items-center justify-center bg-white transition"></div>
-                                Dining Chair
-                            </label>
-                        </li>
-                        <li class="flex items-center">
-                            <label class="flex items-center cursor-pointer hover:text-primary">
-                                <input type="checkbox" class="custom-checkbox hidden">
-                                <div class="w-4 h-4 border border-gray-300 rounded mr-3 flex items-center justify-center bg-white transition"></div>
-                                Sofa Set
-                            </label>
-                        </li>
-                        <li class="flex items-center">
-                            <label class="flex items-center cursor-pointer hover:text-primary">
-                                <input type="checkbox" class="custom-checkbox hidden">
-                                <div class="w-4 h-4 border border-gray-300 rounded mr-3 flex items-center justify-center bg-white transition"></div>
-                                Lighting
-                            </label>
-                        </li>
+                        @endforeach
                     </ul>
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-lg border">
                     <h4 class="font-bold text-lg mb-4">Filter By Price</h4>
                     <div class="relative pt-6 pb-2">
-                        <div class="relative w-full h-1 bg-gray-300 rounded">
-                            <div class="absolute h-1 bg-primary rounded left-0 right-0" id="range-track" style="left: 10%; right: 30%;"></div>
-                        </div>
-                        <input type="range" min="0" max="500" value="50" class="absolute w-full h-1 bg-transparent appearance-none top-6 left-0 pointer-events-none z-20" id="range-min">
-                        <input type="range" min="0" max="500" value="350" class="absolute w-full h-1 bg-transparent appearance-none top-6 left-0 pointer-events-none z-20" id="range-max">
+                        <!--the background track-->
+                        <div class="absolute w-full h-1 bg-gray-300 rounded top-6 z-0"></div>
+                        <!--the active colored track-->
+                        <div id="range-track" class="absolute h-1 bg-primary rounded top-6 z-10" style="left: 0%; right: 0%;"></div>
+
+                        <input type="range" name="min_price" min="0" max="1000" value="{{ request('min_price',0) }}" class="absolute w-full h-1 bg-transparent appearance-none top-6 left-0 pointer-events-none z-20 custom-range-slider price-slider" id="range-min">
+                        <input type="range" name="max_price" min="0" max="1000" value="{{ request('max_price',1000) }}" class="absolute w-full h-1 bg-transparent appearance-none top-6 left-0 pointer-events-none z-20 custom-range-slider price-slider" id="range-max">
                         
                         <div class="flex justify-between mt-4 text-sm font-medium text-gray-600">
-                            <span>$<span id="price-min-display">50</span></span>
-                            <span>$<span id="price-max-display">350</span></span>
+                            <span>$<span id="price-min-display">{{ request('min_price',0) }}</span></span>
+                            <span>$<span id="price-max-display">{{ request('max_price',1000) }}</span></span>
                         </div>
                     </div>
                 </div>
@@ -268,9 +300,21 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const form = document.getElementById("form-filter");
-            document.querySelectorAll('.auto-submit').forEach(element => {
+            document.querySelectorAll('.auto-submit , .filter-checkbox').forEach(element => {
             element.addEventListener('change', () => {
                     form.submit();
+                });
+            });
+
+            let timeout = null;
+            document.querySelectorAll('.price-slider').forEach(slider => {
+                slider.addEventListener('input', function() {
+                    if(this.id === 'range-min') document.getElementById('price-min-display').innerText = this.value;
+                    if(this.id === 'range-max') document.getElementById('price-max-display').intertext = this.value;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        form.submit();
+                    }, 500);
                 });
             });
         });

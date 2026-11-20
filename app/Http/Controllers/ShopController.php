@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Brand;
+use App\Models\Category;
 
 class ShopController extends Controller
 {
@@ -22,9 +24,37 @@ class ShopController extends Controller
 
         $perPage = $request->input('per_page', 3);
 
-        $products = $query->paginate($perPage)->withQueryString();
+        if($request->filled('brand')){
+            $brandIds=$request->input('brand',[]);
+            $query->whereIn('brand_id',$brandIds);
+        }
 
-        return view('shop.index', compact('products'));
+        if($request->filled('category')){
+            $categoryIds= $request->input('category',[]);
+            $query->whereIn('category_id',$categoryIds);
+        }
+
+        if($request->filled('min_price') && $request->filled('max_price')){
+            $minPrice= $request->input('min_price');
+            $maxPrice= $request->input('max_price');
+            $query->whereBetween('sale_price',[$minPrice,$maxPrice]);
+        }
+
+        if($request->filled('search')){
+            $searchTerm= $request->input('search');
+            $query->where(function($q) use ($searchTerm){
+                $q->where('name','like',"%{$searchTerm}%")
+                  ->orWhere('description','like',"%{$searchTerm}%");
+              }); 
+        }
+
+        $products = $query->paginate($perPage)->withQueryString();
+        
+        $brands= Brand::withCount('products')->orderBy('name','ASC')->get();
+
+        $categories= Category::withCount('products')->orderBy('name','ASC')->get();
+
+        return view('shop.index', compact('products','brands','categories'));
     }
 
     public function productDetails(string $slug)
