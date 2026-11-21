@@ -80,7 +80,9 @@
                 
                 <a href="cart.php" class="text-2xl hover:text-primary relative">
                     <i class="fa-solid fa-bag-shopping"></i>
-                    <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {{ Cart::instance('cart')->count() }}
+                    </span>
                 </a>
 
                 <div class="relative group">
