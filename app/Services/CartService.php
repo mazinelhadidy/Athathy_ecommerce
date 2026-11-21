@@ -43,7 +43,7 @@ class CartService
             'options' => $options,
             'tax' => $tax,
             'subtotal' => $qty * $price,
-            'associtedModel' => null,
+            'associatedModel' => null,
         ];
 
         $cart->put($rowId, $cartItem);
@@ -98,7 +98,7 @@ class CartService
         return $this->getCart();
     }
 
-    public function updata(string $rowId, mixed $data): object|bool
+    public function update(string $rowId, mixed $data): object|bool
     {
         $cart = $this->getCart();
         if (!$cart->has($rowId)) return false;
