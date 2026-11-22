@@ -22,7 +22,7 @@
     </style>
       <!-- Main Content Start -->
 
-    <div class="relative bg-sky-700 text-white h-64 flex items-center justify-center bg-cover bg-center" style="background-image: url('assets/images/page-banner.jpg');">
+    <div class="relative bg-sky-700 text-white h-64 flex items-center justify-center bg-cover bg-center" style="background-image: url({{ asset('assets/images/page-banner.jpg') }});">
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
         <div class="relative z-10 text-center">
             <h2 class="text-4xl font-bold mb-2">Shop</h2>
@@ -182,8 +182,8 @@
                         <div class="flex items-center">
                             <span class="mr-2 text-sm font-medium">View:</span>
                             <select name="per_page" class="border rounded p-1 text-sm focus:outline-none focus:border-primary auto-submit">
-                                <option value="3" {{request('per_page')=="3"?"selected":""}}>3 Products</option>
                                 <option value="6" {{request('per_page')=="6"?"selected":""}}>6 Products</option>
+                                <option value="12" {{request('per_page')=="12"?"selected":""}}>12 Products</option>
                                 <option value="48" {{request('per_page')=="48"?"selected":""}}>48 Products</option>
                             </select>
                         </div>

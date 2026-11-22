@@ -8,6 +8,7 @@ use App\Http\Middleware\AuthAdmin;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\CartController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -16,6 +17,9 @@ use App\Http\Controllers\ShopController;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home.index');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/{slug}', [ShopController::class, 'productDetails'])->name('shop.product.details');
+
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

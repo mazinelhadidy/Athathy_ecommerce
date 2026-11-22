@@ -9,6 +9,7 @@ class CartService
 {
     protected string $instance = 'default';
     protected ?string $lastRowId = null;
+    protected $defaultTax = 18;
 
     public function instance(string $name): self
     {
@@ -25,31 +26,37 @@ class CartService
         });
     }
 
-    public function add(mixed $id, ?string $name = null, ?int $qty = null, ?float $price = null, array $options = [], int $tax = 0): self
+    public function add(mixed $id, ?string $name = null, int $qty = 1, float $price = 0, array $options = [], int $tax = 0): self
     {
         if (is_array($id)) {
             return $this->addArray($id);
         }
 
-        $cart = $this->getCart();
-        $rowId = md5((string)$id . serialize($options));
+        $cart  = $this->getCart();
+        $rowId = md5((string) $id . json_encode($options));
 
-        $cartItem = (object)[
-            'rowId' => $rowId,
-            'id' => $id,
-            'name' => $name,
-            'qty' => $qty,
-            'price' => $price,
-            'options' => $options,
-            'tax' => $tax,
-            'subtotal' => $qty * $price,
-            'associatedModel' => null,
-        ];
+        if ($cart->has($rowId)) {
+            $item = $cart->get($rowId);
+            $item->qty += $qty;
+            $item->subtotal = $item->qty * $item->price;
+            $cart->put($rowId, $item);
+        } else {
+            $cart->put($rowId, (object) [
+                'rowId'           => $rowId,
+                'id'              => $id,
+                'name'            => $name,
+                'qty'             => $qty,
+                'price'           => $price,
+                'options'         => $options,
+                'tax'             => $tax != null ? $tax : $this->defaultTax,
+                'subtotal'        => $qty * $price,
+                'associatedModel' => null,
+            ]);
+        }
 
-        $cart->put($rowId, $cartItem);
         $this->lastRowId = $rowId;
-
         Session::put("cart.{$this->instance}", $cart);
+
         return $this;
     }
 
@@ -131,10 +138,22 @@ class CartService
         Session::forget("cart.{$this->instance}");
     }
 
+    public function subTotal(): float
+    {
+        return (float) $this->getCart()->sum('subtotal');
+    }
+
+    public function taxTotal(): float
+    {
+        return (float) $this->getCart()->sum(function ($item) {
+            return ($item->price * $item->qty) * ($item->tax / 100);
+        });
+    }
+
 
     public function total(): float
     {
-        return (float) $this->getCart()->sum('subtotal');
+        return $this->subTotal() + $this->taxTotal();
     }
 
     public function count(): int
