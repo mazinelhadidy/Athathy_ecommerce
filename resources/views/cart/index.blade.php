@@ -54,31 +54,43 @@
                                     </div>
                                 </td>
                                 <td class="py-4 px-4" data-label="Quantity">
-                                    <div class="flex border rounded w-max">
-                                        <button class="px-3 py-1 hover:bg-gray-100" onclick="updateCartQty(this, -1)">-</button>
-                                        <input type="number" value="{{ $item->qty }}" class="w-12 text-center focus:outline-none" readonly>
-                                        <button class="px-3 py-1 hover:bg-gray-100" onclick="updateCartQty(this, 1)">+</button>
-                                    </div>
+                                <form action="{{ route('cart.update')}}" method="POST">
+                                     @csrf
+                                      @method('PUT')
+                                      <input type="hidden" name="rowId" value="{{ $item->rowId }}">                                 
+                                       <div class="flex border rounded w-max">
+                                          <button type="submit" class="px-3 py-1 hover:bg-gray-100" onclick="updateCartQuantity(this, -1)">-</button>
+                                           <input type="number" name="quantity" value="{{ $item->qty }}" class="w-12 text-center focus:outline-none" readonly>
+                                          <button type="submit" class="px-3 py-1 hover:bg-gray-100" onclick="updateCartQuantity(this, 1)">+</button>
+                                      </div>
+                                 </form>
                                 </td>
                                 <td class="py-4 px-4 font-bold text-primary" data-label="Total">${{number_format($item->subtotal,2)}}</td>
                                 <td class="py-4 px-4" data-label="Action">
-                                    <button class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can text-xl"></i></button>
+                                    <form action="{{ route('cart.remove',$item->rowId)}}" method="POST" class="inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                    <button type="submit" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can text-xl"></i></button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach
-                        </tbody>
+                        </tbody> 
                     </table>
                 </div>
     
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
-                    <a href="shop.php" class="bg-sky-800 text-white px-6 py-3 rounded hover:bg-primary transition w-full sm:w-auto text-center">Continue Shopping</a>
+                    <a href="{{ route('shop.index') }}" class="bg-sky-800 text-white px-6 py-3 rounded hover:bg-primary transition w-full sm:w-auto text-center">Continue Shopping</a>
                     <div class="flex gap-4 w-full sm:w-auto">
-                        <a href="#" class="border border-gray-800 text-gray-800 px-6 py-3 rounded hover:bg-sky-800 hover:text-white transition w-full sm:w-auto text-center">Clear Cart</a>
-                        <a href="#" class="border border-gray-800 text-gray-800 px-6 py-3 rounded hover:bg-sky-800 hover:text-white transition w-full sm:w-auto text-center">Update Cart</a>
+                        <form action="{{route('cart.clear')}}" method="POST" class="w-full" >
+                            @csrf
+                            @method('DELETE')
+                        <button type="submit" class="border border-gray-800 text-gray-800 px-6 py-3 rounded hover:bg-sky-800 hover:text-white transition w-full sm:w-auto text-center">Clear Cart</button>
+                        </form>
                     </div>
                 </div>
     
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8"> 
                     <div class="bg-gray-50 p-6 rounded border">
                         <h4 class="font-bold text-lg mb-2">Calculate Shipping</h4>
                         <p class="text-sm text-gray-500 mb-4">Estimate your shipping fee *</p>
@@ -150,4 +162,16 @@
     </section>
 
     <!-- Main Content End -->
+
+    <script>
+        function updateCartQuantity(button, change) {
+        const form = button.closest('form');
+        const quantityInput = form.querySelector('input[name="quantity"]'); 
+        let currentQty = parseInt(quantityInput.value);
+        if (isNaN(currentQty)) currentQty = 0;   
+       const newQty = Math.max(0,currentQty + change);
+       quantityInput .value = newQty;
+    }
+    </script>
+
 </x-app-layout>
