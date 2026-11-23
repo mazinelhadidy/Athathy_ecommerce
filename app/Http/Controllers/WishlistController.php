@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Facades\Cart;
+use App\Models\Product;
 
 class WishlistController extends Controller
 {
+
+    public function index()
+    {
+        return view('wishlist.index');
+    }
+
+
     public function add_to_wishlist(Request $request)
     {
         $request->validate([
@@ -17,7 +25,7 @@ class WishlistController extends Controller
         ]);
 
         Cart::instance('wishlist')->add($request->product_id, $request->name, $request->quantity, $request->price)
-            ->associate('App/Models/Product');
+            ->associate(Product::class);
         return back()->with('success', 'Product added to wishlist successfully!');
     }
 }

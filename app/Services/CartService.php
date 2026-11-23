@@ -92,12 +92,14 @@ class CartService
     public function model(string $rowId): ?object
     {
         $item = $this->getCart()->get($rowId);
-
-        if ($item && $item->associatedModel) {
-            return $item->associatedModel::find($item->id);
+        if (!$item || !$item->associatedModel) {
+            return null;
         }
-
-        return null;
+        $modelClass = str_replace('/', '\\', $item->associatedModel);
+        if (!class_exists($modelClass)) {
+            return null;
+        }
+        return $modelClass::find($item->id);
     }
 
     public function content(): Collection
