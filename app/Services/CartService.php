@@ -135,7 +135,7 @@ class CartService
         Session::put("cart.{$this->instance}", $cart);
     }
 
-    public function destory(): void
+    public function destroy(): void
     {
         Session::forget("cart.{$this->instance}");
     }

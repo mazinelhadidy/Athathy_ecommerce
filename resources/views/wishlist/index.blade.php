@@ -59,14 +59,30 @@
                             <button class="bg-sky-800 text-white px-4 py-2 rounded hover:bg-primary transition text-sm">Add to Cart</button>
                         </td>
                         <td class="py-4 px-4" data-label="Action">
-                            <button class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can text-xl"></i></button>
+                            <form action="{{ route('wishlist.remove',$item->rowId) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this item from your wishlist?');">
+                                @csrf
+                                @method('DELETE')
+                            <button type="submit" class="text-gray-400 hover:text-red-500 transition"><i class="fa-solid fa-trash-can text-xl"></i></button>
+                            </form>
                         </td>
                     </tr>
                     @endforeach                
                 </tbody>
             </table>
         </div>
-        @endif
+
+         <div class="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
+                    <a href="{{ route('shop.index') }}" class="bg-sky-800 text-white px-6 py-3 rounded hover:bg-primary transition w-full sm:w-auto text-center">Continue Shopping</a>
+                    <div class="flex gap-4 w-full sm:w-auto">
+                        <form action="{{route('wishlist.clear')}}" method="POST" class="w-full" onsubmit="return confirm('Are you sure you want to clear your wishlist?');">
+                            @csrf
+                            @method('DELETE')
+                        <button type="submit" class="border border-gray-800 text-gray-800 px-6 py-3 rounded hover:bg-sky-800 hover:text-white transition w-full sm:w-auto text-center">Clear Wishlist</button>
+                        </form>
+                    </div>
+                </div>
+
+        @endif 
     </div>
 </section>
 

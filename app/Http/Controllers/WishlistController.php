@@ -28,4 +28,16 @@ class WishlistController extends Controller
             ->associate(Product::class);
         return back()->with('success', 'Product added to wishlist successfully!');
     }
+
+    public function remove_from_wishlist(string $rowId)
+    {
+        Cart::instance('wishlist')->remove($rowId);
+        return back()->with('success', 'Product removed from wishlist successfully!');
+    }
+
+    public function clear_wishlist()
+    {
+        Cart::instance('wishlist')->destroy();
+        return back()->with('success', 'Wishlist cleared successfully!');
+    }
 }

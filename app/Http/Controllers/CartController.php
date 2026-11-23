@@ -43,7 +43,7 @@ class CartController extends Controller
 
     public function clear_cart()
     {
-        Cart::instance('cart')->destory();
+        Cart::instance('cart')->destroy();
         return back()->with('success', 'Cart cleared successfully!');
     }
 }
