@@ -76,7 +76,12 @@
                     </div>
                 </div>
 
-                <a href="wishlist.php" class="text-2xl hover:text-primary"><i class="fa-regular fa-heart"></i></a>
+                <a href="#" class="text-2xl hover:text-primary relative">
+                    <i class="fa-regular fa-heart"></i>
+                    <span class="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                        {{ Cart::instance('wishlist')->count() }}
+                    </span>
+                </a>
                 
                 <a href="{{ route('cart.index') }}" class="text-2xl hover:text-primary relative">
                     <i class="fa-solid fa-bag-shopping"></i>

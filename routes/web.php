@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\WishlistController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -23,6 +24,8 @@ Route::post('/cart/add', [CartController::class, 'add_to_cart'])->name('cart.add
 Route::put('/cart/update', [CartController::class, 'update_cart'])->name('cart.update');
 Route::delete('/cart/delete/{rowId}', [CartController::class, 'remove_form_cart'])->name('cart.remove');
 Route::delete('/cart/clear', [CartController::class, 'clear_cart'])->name('cart.clear');
+
+Route::post('/wishlist/add', [WishlistController::class, 'add_to_wishlist'])->name('wishlist.add');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
