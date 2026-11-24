@@ -107,6 +107,11 @@ class CartService
         return $this->getCart();
     }
 
+    public function get(string $rowId): ?object
+    {
+        return $this->getCart()->get($rowId);
+    }
+
     public function update(string $rowId, mixed $data): object|bool
     {
         $cart = $this->getCart();

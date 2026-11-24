@@ -40,4 +40,16 @@ class WishlistController extends Controller
         Cart::instance('wishlist')->destroy();
         return back()->with('success', 'Wishlist cleared successfully!');
     }
+
+    public function move_to_cart(string $rowId)
+    {
+        $item = Cart::instance('wishlist')->get($rowId);
+        if (!$item) {
+            return back()->with('error', 'Product not found in wishlist!');
+        }
+        Cart::instance('cart')->add($item->id, $item->name, $item->qty, $item->price)
+            ->associate(Product::class);
+        Cart::instance('wishlist')->remove($rowId);
+        return back()->with('success', 'Product moved to cart successfully!');
+    }
 }

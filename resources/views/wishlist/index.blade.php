@@ -56,7 +56,10 @@
                             </div>
                         </td>
                         <td class="py-4 px-4" data-label="Add to Cart">
-                            <button class="bg-sky-800 text-white px-4 py-2 rounded hover:bg-primary transition text-sm">Add to Cart</button>
+                            <form action="{{route('wishlist.move.to.cart',$item->rowId)}}" method="POST">
+                                @csrf
+                            <button type="submit" class="bg-sky-800 text-white px-4 py-2 rounded hover:bg-primary transition text-sm">Add to Cart</button>
+                            </form>
                         </td>
                         <td class="py-4 px-4" data-label="Action">
                             <form action="{{ route('wishlist.remove',$item->rowId) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this item from your wishlist?');">
