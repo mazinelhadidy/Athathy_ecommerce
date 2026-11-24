@@ -10,6 +10,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\CouponController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -66,6 +67,10 @@ Route::middleware([AuthAdmin::class])->group(function () {
     Route::delete('/admin/product-delete/{id}', [ProductController::class, 'productDelete'])->name('admin.product.delete');
     Route::delete('/admin/product-bulk-delete', [ProductController::class, 'productBulkDelete'])->name('admin.product.bulk.delete');
     Route::get('/admin/product-export', [ProductController::class, 'productExport'])->name('admin.product.export');
+
+    Route::get('/admin/coupons', [CouponController::class, 'coupons'])->name('admin.coupons');
+    Route::get('/admin/coupon/add', [CouponController::class, 'coupon_add'])->name('admin.coupon.add');
+    Route::post('/admin/coupon-store', [CouponController::class, 'coupon_store'])->name('admin.coupon.store');
 });
 
 require __DIR__ . '/auth.php';
