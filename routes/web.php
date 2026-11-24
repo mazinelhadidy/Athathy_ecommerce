@@ -71,6 +71,9 @@ Route::middleware([AuthAdmin::class])->group(function () {
     Route::get('/admin/coupons', [CouponController::class, 'coupons'])->name('admin.coupons');
     Route::get('/admin/coupon/add', [CouponController::class, 'coupon_add'])->name('admin.coupon.add');
     Route::post('/admin/coupon-store', [CouponController::class, 'coupon_store'])->name('admin.coupon.store');
+    Route::get('/admin/coupon/edit/{coupon_id}', [CouponController::class, 'coupon_edit'])->name('admin.coupon.edit');
+    Route::put('/admin/coupon-update/{coupon_id}', [CouponController::class, 'coupon_update'])->name('admin.coupon.update');
+    Route::delete('/admin/coupon-delete/{coupon_id}', [CouponController::class, 'coupon_delete'])->name('admin.coupon.delete');
 });
 
 require __DIR__ . '/auth.php';

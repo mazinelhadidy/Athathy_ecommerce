@@ -216,10 +216,10 @@
                 <div>
                     <h4 class="text-white font-bold text-lg mb-6">Our Categories</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-primary transition">Category 1</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Category 2</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Furniture</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Lighting</a></li>
+                        <li><a href="{{ route('shop.index') }}" class="hover:text-primary transition">Category 1</a></li>
+                        <li><a href="{{ route('shop.index') }}" class="hover:text-primary transition">Category 2</a></li>
+                        <li><a href="{{ route('shop.index') }}" class="hover:text-primary transition">Furniture</a></li>
+                        <li><a href="{{ route('shop.index') }}" class="hover:text-primary transition">Lighting</a></li>
                     </ul>
                 </div>
 
@@ -227,7 +227,7 @@
                     <h4 class="text-white font-bold text-lg mb-6">Information</h4>
                     <ul class="space-y-2 text-sm">
                         <li><a href="about.php" class="hover:text-primary transition">About Us</a></li>
-                        <li><a href="#" class="hover:text-primary transition">How to Shop</a></li>
+                        <li><a href="{{ route('shop.index') }}" class="hover:text-primary transition">How to Shop</a></li>
                         <li><a href="#" class="hover:text-primary transition">FAQ</a></li>
                         <li><a href="contact.php" class="hover:text-primary transition">Contact Us</a></li>
                     </ul>
@@ -236,10 +236,10 @@
                 <div>
                     <h4 class="text-white font-bold text-lg mb-6">My Account</h4>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="login.php" class="hover:text-primary transition">Sign In</a></li>
-                        <li><a href="cart.php" class="hover:text-primary transition">View Cart</a></li>
-                        <li><a href="wishlist.php" class="hover:text-primary transition">My Wishlist</a></li>
-                        <li><a href="#" class="hover:text-primary transition">Track My Order</a></li>
+                        <li><a href="{{ route('login') }}" class="hover:text-primary transition">Sign In</a></li>
+                        <li><a href="{{ route('cart.index') }}" class="hover:text-primary transition">View Cart</a></li>
+                        <li><a href="{{ route('wishlist.index') }}" class="hover:text-primary transition">My Wishlist</a></li>
+                        <li><a href="{{ route('cart.index') }}" class="hover:text-primary transition">Track My Order</a></li>
                     </ul>
                 </div>
             </div>
